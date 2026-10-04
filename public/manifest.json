@@ -1,0 +1,16 @@
+{
+  "name": "2026 U.S. Army JROTC National Drill Championship",
+  "short_name": "JROTC Drill Score",
+  "description": "Official Field Judge Scoring & Tabulation System (SOP V4 Feb 2026)",
+  "start_url": "/judge",
+  "display": "standalone",
+  "background_color": "#111418",
+  "theme_color": "#FFC72C",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
