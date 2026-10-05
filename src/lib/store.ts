@@ -242,8 +242,8 @@ export const INITIAL_EVENTS: DrillEvent[] = [
 
 export const INITIAL_JUDGES: Judge[] = [
   {
-    id: 'jjjjjjjj-1111-0000-0000-000000000001',
-    user_id: 'uuuuuuuu-1111-0000-0000-000000000001',
+    id: '99999999-1111-0000-0000-000000000001',
+    user_id: '88888888-1111-0000-0000-000000000001',
     full_name: 'SGM (Ret) Marcus Vance',
     assigned_event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     judge_number: 1, // 1 = Head Judge
@@ -253,8 +253,8 @@ export const INITIAL_JUDGES: Judge[] = [
     rank_or_title: 'Head Judge (TC 3-21.5 Evaluator)',
   },
   {
-    id: 'jjjjjjjj-2222-0000-0000-000000000002',
-    user_id: 'uuuuuuuu-2222-0000-0000-000000000002',
+    id: '99999999-2222-0000-0000-000000000002',
+    user_id: '88888888-2222-0000-0000-000000000002',
     full_name: '1SG (Ret) Robert Sterling',
     assigned_event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     judge_number: 2, // Judge #2
@@ -264,8 +264,8 @@ export const INITIAL_JUDGES: Judge[] = [
     rank_or_title: 'Judge #2 (Marching & Cadence)',
   },
   {
-    id: 'jjjjjjjj-3333-0000-0000-000000000003',
-    user_id: 'uuuuuuuu-3333-0000-0000-000000000003',
+    id: '99999999-3333-0000-0000-000000000003',
+    user_id: '88888888-3333-0000-0000-000000000003',
     full_name: 'MSG Elena Torres',
     assigned_event_id: 'eeeeeeee-1111-0000-0000-000000000001',
     judge_number: 1,
@@ -275,8 +275,8 @@ export const INITIAL_JUDGES: Judge[] = [
     rank_or_title: 'Head Judge (Unit Inspection)',
   },
   {
-    id: 'jjjjjjjj-4444-0000-0000-000000000004',
-    user_id: 'uuuuuuuu-4444-0000-0000-000000000004',
+    id: '99999999-4444-0000-0000-000000000004',
+    user_id: '88888888-4444-0000-0000-000000000004',
     full_name: 'SFC David Washington',
     assigned_event_id: 'eeeeeeee-1111-0000-0000-000000000004',
     judge_number: 1,
@@ -299,7 +299,7 @@ export const INITIAL_SCORECARDS: Scorecard[] = [
   {
     id: '10101010-0000-0000-0000-000000000101',
     team_id: 'aaaaaaaa-1111-0000-0000-000000000001',
-    judge_id: 'jjjjjjjj-1111-0000-0000-000000000001',
+    judge_id: '99999999-1111-0000-0000-000000000001',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     is_head_judge: true,
     raw_score: 96.0,
@@ -326,7 +326,7 @@ export const INITIAL_SCORECARDS: Scorecard[] = [
   {
     id: '10101010-0000-0000-0000-000000000102',
     team_id: 'aaaaaaaa-1111-0000-0000-000000000001',
-    judge_id: 'jjjjjjjj-2222-0000-0000-000000000002',
+    judge_id: '99999999-2222-0000-0000-000000000002',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     is_head_judge: false,
     raw_score: 94.5,
@@ -354,7 +354,7 @@ export const INITIAL_SCORECARDS: Scorecard[] = [
   {
     id: '20202020-0000-0000-0000-000000000201',
     team_id: 'aaaaaaaa-2222-0000-0000-000000000002',
-    judge_id: 'jjjjjjjj-1111-0000-0000-000000000001',
+    judge_id: '99999999-1111-0000-0000-000000000001',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     is_head_judge: true,
     raw_score: 95.0,
@@ -380,7 +380,7 @@ export const INITIAL_SCORECARDS: Scorecard[] = [
   {
     id: '20202020-0000-0000-0000-000000000202',
     team_id: 'aaaaaaaa-2222-0000-0000-000000000002',
-    judge_id: 'jjjjjjjj-2222-0000-0000-000000000002',
+    judge_id: '99999999-2222-0000-0000-000000000002',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     is_head_judge: false,
     raw_score: 93.0,
@@ -408,7 +408,7 @@ export const INITIAL_SCORECARDS: Scorecard[] = [
   {
     id: '30303030-0000-0000-0000-000000000301',
     team_id: 'aaaaaaaa-3333-0000-0000-000000000003',
-    judge_id: 'jjjjjjjj-1111-0000-0000-000000000001',
+    judge_id: '99999999-1111-0000-0000-000000000001',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     is_head_judge: true,
     raw_score: 94.0, // Ozark HJ (95) > MacArthur HJ (94) -> Ozark wins SOP Rule 1 tie-breaker!
@@ -434,7 +434,7 @@ export const INITIAL_SCORECARDS: Scorecard[] = [
   {
     id: '30303030-0000-0000-0000-000000000302',
     team_id: 'aaaaaaaa-3333-0000-0000-000000000003',
-    judge_id: 'jjjjjjjj-2222-0000-0000-000000000002',
+    judge_id: '99999999-2222-0000-0000-000000000002',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
     is_head_judge: false,
     raw_score: 94.0,
@@ -464,7 +464,7 @@ export const INITIAL_PENALTIES: PenaltyRecord[] = [
     id: '90101010-0000-0000-0000-000000000101',
     team_id: 'aaaaaaaa-1111-0000-0000-000000000001',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
-    head_judge_id: 'jjjjjjjj-1111-0000-0000-000000000001',
+    head_judge_id: '99999999-1111-0000-0000-000000000001',
     missing_cadet_count: 0,
     pause_violation_count: 0,
     boundary_violations: 0,
@@ -477,7 +477,7 @@ export const INITIAL_PENALTIES: PenaltyRecord[] = [
     id: '90202020-0000-0000-0000-000000000201',
     team_id: 'aaaaaaaa-2222-0000-0000-000000000002',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
-    head_judge_id: 'jjjjjjjj-1111-0000-0000-000000000001',
+    head_judge_id: '99999999-1111-0000-0000-000000000001',
     missing_cadet_count: 0,
     pause_violation_count: 0,
     boundary_violations: 0,
@@ -490,7 +490,7 @@ export const INITIAL_PENALTIES: PenaltyRecord[] = [
     id: '90303030-0000-0000-0000-000000000301',
     team_id: 'aaaaaaaa-3333-0000-0000-000000000003',
     event_id: 'eeeeeeee-1111-0000-0000-000000000002',
-    head_judge_id: 'jjjjjjjj-1111-0000-0000-000000000001',
+    head_judge_id: '99999999-1111-0000-0000-000000000001',
     missing_cadet_count: 0,
     pause_violation_count: 0,
     boundary_violations: 0,
