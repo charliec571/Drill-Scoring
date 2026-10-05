@@ -356,6 +356,7 @@ WITH event_scores AS (
 SELECT 
     result_id,
     team_id,
+    event_id,
     school_id,
     school_name,
     division,

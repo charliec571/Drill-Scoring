@@ -117,6 +117,7 @@ export interface FinalEventResult {
 export interface ViewEventRanking {
   result_id: string;
   team_id: string;
+  event_id: string;
   school_id: string;
   school_name: string;
   division: Division;
