@@ -14,6 +14,12 @@ export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
+let clientComponentInstance: ReturnType<typeof createClient> | null = null;
+
 export function createClientComponentClient() {
-  return createClient(supabaseUrl, supabaseAnonKey);
+  if (!clientComponentInstance) {
+    clientComponentInstance = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return clientComponentInstance;
 }
+

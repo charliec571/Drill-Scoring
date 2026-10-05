@@ -65,11 +65,12 @@ export default function JudgeScorecardPage() {
           
           if (user) {
             // Fetch judge details
-            const { data: judge } = await supabase
+            const { data: judgeRaw } = await supabase
               .from('judges')
               .select('*, events(*)')
               .eq('user_id', user.id)
               .single();
+            const judge = judgeRaw as any;
 
             if (judge) {
               activeJudge = judge;
@@ -125,7 +126,7 @@ export default function JudgeScorecardPage() {
       }
     }
     loadData();
-  }, [supabase]);
+  }, []);
 
   // Switch demo judge (Head Judge vs Judge #2)
   const handleSwitchDemoJudge = (judgeId: string) => {
@@ -246,7 +247,7 @@ export default function JudgeScorecardPage() {
             criteria_breakdown: criteria,
             status: 'SUBMITTED',
             submitted_at: new Date().toISOString()
-          });
+          } as any);
 
         if (scorecardErr) console.warn('Supabase scorecard sync warning:', scorecardErr.message);
 
@@ -261,7 +262,7 @@ export default function JudgeScorecardPage() {
               pause_violation_count: pauseViolations,
               boundary_violations: boundaryViolations,
               time_under_over_seconds: timePenaltySecs,
-            });
+            } as any);
           if (penaltyErr) console.warn('Supabase penalty sync warning:', penaltyErr.message);
         }
       }
