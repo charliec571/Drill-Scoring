@@ -195,37 +195,37 @@ export default function AdminDashboardPage() {
       {activeTab === 'standings' && (
         <div className="space-y-6">
           {/* Division Selector */}
-          <div className="flex items-center justify-between bg-army-dark p-3 rounded-xl border border-army-border">
+          <div className="flex items-center justify-between camo-card p-3 rounded-xl border border-concordia-burgundy/30">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold uppercase text-gray-400">Select Division:</span>
+              <span className="text-xs font-bold uppercase text-gray-300">Select Division:</span>
               {(['ARMED', 'UNARMED'] as Division[]).map((div) => (
                 <button
                   key={div}
                   onClick={() => setSelectedDivision(div)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
                     selectedDivision === div
-                      ? 'bg-army-gold text-army-black shadow-md'
-                      : 'bg-army-black text-gray-300 hover:text-white'
+                      ? 'bg-white text-concordia-burgundy-dark font-black shadow-md border border-white'
+                      : 'bg-military-dark text-gray-200 hover:text-white border border-concordia-burgundy/30'
                   }`}
                 >
                   {div} DIVISION
                 </button>
               ))}
             </div>
-            <span className="text-xs text-gray-400 font-mono hidden sm:inline">
-              SOP Paragraph 5 Tie-Breakers Active
+            <span className="text-xs text-gray-300 font-mono hidden sm:inline">
+              Tie-Breakers Active
             </span>
           </div>
 
           {/* OVERALL CHAMPIONSHIP STANDINGS TABLE */}
-          <div className="bg-army-dark border border-army-border rounded-xl overflow-hidden shadow-lg">
-            <div className="bg-army-black p-4 border-b border-army-border flex items-center justify-between">
+          <div className="camo-card border border-concordia-burgundy/40 rounded-xl overflow-hidden shadow-xl">
+            <div className="bg-concordia-burgundy-deep/90 p-4 border-b border-concordia-burgundy/40 flex items-center justify-between">
               <div>
                 <h3 className="text-base font-extrabold text-white flex items-center gap-2">
-                  <Award className="w-5 h-5 text-army-gold" />
+                  <Award className="w-5 h-5 text-white" />
                   {selectedDivision} OVERALL CHAMPIONSHIP STANDINGS
                 </h3>
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-gray-300">
                   Calculated from all 4 events; ties resolved by 1st, 2nd, and 3rd place finish counts.
                 </p>
               </div>
@@ -312,12 +312,12 @@ export default function AdminDashboardPage() {
                 return (
                   <div
                     key={ev.id}
-                    className="bg-army-dark border border-army-border rounded-xl overflow-hidden shadow-md"
+                    className="camo-card border border-concordia-burgundy/35 rounded-xl overflow-hidden shadow-md"
                   >
-                    <div className="bg-army-black/80 px-4 py-3 border-b border-army-border flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <div className="bg-concordia-burgundy-deep/70 px-4 py-3 border-b border-concordia-burgundy/40 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-extrabold text-army-gold">{ev.name}</span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-army-slate text-gray-300">
+                        <span className="text-sm font-extrabold text-white">{ev.name}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-concordia-burgundy/80 text-white border border-white/20">
                           {ev.category}
                         </span>
                       </div>
@@ -404,25 +404,25 @@ export default function AdminDashboardPage() {
       {/* TAB 2: LIVE SCORING FEED */}
       {activeTab === 'feed' && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-army-dark p-3.5 rounded-xl border border-army-border">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 camo-card p-3.5 rounded-xl border border-concordia-burgundy/30">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-army-gold" />
-              <span className="text-xs font-bold uppercase text-gray-400">Filter by Status:</span>
+              <Filter className="w-4 h-4 text-concordia-burgundy-lighter" />
+              <span className="text-xs font-bold uppercase text-gray-300">Filter by Status:</span>
               {['ALL', 'DRAFT', 'SUBMITTED', 'VERIFIED'].map((st) => (
                 <button
                   key={st}
                   onClick={() => setStatusFilter(st)}
                   className={`px-3 py-1 rounded text-xs font-bold transition-all ${
                     statusFilter === st
-                      ? 'bg-army-gold text-army-black'
-                      : 'bg-army-black text-gray-400 hover:text-white'
+                      ? 'bg-white text-concordia-burgundy-dark font-black shadow-sm border border-white'
+                      : 'bg-military-dark text-gray-300 hover:text-white border border-concordia-burgundy/30'
                   }`}
                 >
                   {st}
                 </button>
               ))}
             </div>
-            <span className="text-xs text-gray-400 font-mono">
+            <span className="text-xs text-gray-300 font-mono">
               Showing {filteredScorecards.length} of {scorecards.length} cards
             </span>
           </div>
@@ -437,7 +437,7 @@ export default function AdminDashboardPage() {
               return (
                 <div
                   key={sc.id}
-                  className="bg-army-dark border border-army-border rounded-xl p-4 shadow-sm space-y-3"
+                  className="camo-card border border-concordia-burgundy/35 rounded-xl p-4 shadow-sm space-y-3"
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -521,14 +521,14 @@ export default function AdminDashboardPage() {
 
       {/* TAB 3: PENALTY AUDIT LOG */}
       {activeTab === 'penalties' && (
-        <div className="bg-army-dark border border-army-border rounded-xl overflow-hidden shadow-lg">
-          <div className="bg-army-black p-4 border-b border-army-border flex items-center justify-between">
+        <div className="camo-card border border-concordia-burgundy/35 rounded-xl overflow-hidden shadow-xl">
+          <div className="bg-concordia-burgundy-deep/80 p-4 border-b border-concordia-burgundy/40 flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-red-400" />
                 OFFICIAL COMPETITION PENALTY AUDIT LOG
               </h3>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-300">
                 Full chronological ledger of boundary, cadence pause, missing cadet, and time infractions.
               </p>
             </div>
@@ -616,15 +616,15 @@ export default function AdminDashboardPage() {
 
       {/* TAB 4: ROSTER & DRILL SCHEDULES */}
       {activeTab === 'roster' && (
-        <div className="bg-army-dark border border-army-border rounded-xl overflow-hidden shadow-lg">
-          <div className="bg-army-black p-4 border-b border-army-border flex items-center justify-between">
+        <div className="camo-card border border-concordia-burgundy/35 rounded-xl overflow-hidden shadow-xl">
+          <div className="bg-concordia-burgundy-deep/80 p-4 border-b border-concordia-burgundy/40 flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Users className="w-5 h-5 text-army-gold" />
+                <Users className="w-5 h-5 text-white" />
                 CHAMPIONSHIP ROSTER & DRILL PAD ASSIGNMENTS
               </h3>
-              <p className="text-xs text-gray-400">
-                Official list of registered Army JROTC Brigade teams and performance schedules.
+              <p className="text-xs text-gray-300">
+                Official list of registered drill teams and performance schedules.
               </p>
             </div>
           </div>

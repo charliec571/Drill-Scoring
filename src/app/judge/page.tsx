@@ -393,27 +393,27 @@ export default function JudgeScorecardPage() {
 
             {/* HEAD JUDGE SPECIAL INSPECTION BREAKDOWN */}
             {judgeInfo?.is_head_judge && (
-              <div className="bg-slate-800 rounded-xl border border-slate-700 p-4 space-y-4">
-                <h2 className="text-sm font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                  <FileText size={18} /> SOP Tie-Breaker Categories (Head Judge Only)
+              <div className="camo-card rounded-xl border border-concordia-burgundy/40 p-4 space-y-4 shadow-lg">
+                <h2 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                  <FileText size={18} className="text-concordia-burgundy-lighter" /> Tie-Breaker Categories (Head Judge Only)
                 </h2>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-1">
-                    <label className="text-xs text-slate-400">Overall Knowledge (Tie-Breaker #3)</label>
+                  <div className="bg-military-dark/90 p-3 rounded-lg border border-concordia-burgundy/30 space-y-1">
+                    <label className="text-xs text-gray-300 font-medium">Overall Knowledge (Tie-Breaker #3)</label>
                     <input 
                       type="number"
                       value={overallKnowledge}
                       onChange={(e) => setOverallKnowledge(Number(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-center text-lg font-bold text-amber-400"
+                      className="w-full bg-military-slate/60 border border-concordia-burgundy/40 rounded p-2 text-center text-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-concordia-burgundy"
                     />
                   </div>
-                  <div className="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-1">
-                    <label className="text-xs text-slate-400">Uniform Appearance (Tie-Breaker #4)</label>
+                  <div className="bg-military-dark/90 p-3 rounded-lg border border-concordia-burgundy/30 space-y-1">
+                    <label className="text-xs text-gray-300 font-medium">Uniform Appearance (Tie-Breaker #4)</label>
                     <input 
                       type="number"
                       value={uniformAppearance}
                       onChange={(e) => setUniformAppearance(Number(e.target.value))}
-                      className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-center text-lg font-bold text-amber-400"
+                      className="w-full bg-military-slate/60 border border-concordia-burgundy/40 rounded p-2 text-center text-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-concordia-burgundy"
                     />
                   </div>
                 </div>
@@ -422,9 +422,9 @@ export default function JudgeScorecardPage() {
 
             {/* HEAD JUDGE PENALTY CONTROLLERS */}
             {judgeInfo?.is_head_judge && (
-              <div className="bg-slate-800 rounded-xl border border-red-900/50 p-4 space-y-4">
-                <h2 className="text-sm font-semibold text-red-400 uppercase tracking-wider flex items-center gap-2">
-                  <ShieldAlert size={18} /> Rule Violations & Deductions
+              <div className="camo-card rounded-xl border border-red-900/50 p-4 space-y-4 shadow-lg">
+                <h2 className="text-sm font-extrabold text-red-300 uppercase tracking-wider flex items-center gap-2">
+                  <ShieldAlert size={18} className="text-red-400" /> Rule Violations & Deductions
                 </h2>
 
                 <div className="space-y-3">
