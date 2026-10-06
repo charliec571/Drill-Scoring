@@ -69,8 +69,10 @@ export default function StadiumScoreboardPage() {
           <Sparkles className="w-3.5 h-3.5 text-army-gold" /> Official Championship Leaderboard
         </div>
 
-        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase">
-          Concordia High School JROTC Annual Clendenen
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight">
+          <span className="block">Concordia High School</span>
+          <span className="block">Annual Clendenen</span>
+          <span className="block">Drill Meet</span>
         </h1>
         <p className="text-sm sm:text-base text-gray-300 mt-2 font-medium">
           March 6, 2027 • Official Standings

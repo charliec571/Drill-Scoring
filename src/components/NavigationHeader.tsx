@@ -47,16 +47,10 @@ export default function NavigationHeader() {
             <span className="text-xs font-black tracking-tighter">★</span>
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-army-gold">
-                Concordia H.S. JROTC
-              </span>
-              <span className="hidden sm:inline-block px-1.5 py-0.2 text-[10px] uppercase font-mono font-bold bg-army-green/60 text-army-gold rounded border border-army-gold/30">
-                Mar 6, 2027
-              </span>
-            </div>
-            <h1 className="text-sm sm:text-base font-extrabold text-white leading-tight">
-              Annual Clendenen
+            <h1 className="text-xs sm:text-sm font-extrabold text-white leading-tight uppercase tracking-tight">
+              <span className="block">Concordia High School</span>
+              <span className="block text-army-gold">Annual Clendenen</span>
+              <span className="block">Drill Meet</span>
             </h1>
           </div>
         </Link>

@@ -3,8 +3,8 @@ import './globals.css';
 import NavigationHeader from '@/components/NavigationHeader';
 
 export const metadata: Metadata = {
-  title: 'Concordia High School JROTC Annual Clendenen — March 6, 2027',
-  description: 'Official Field Judge Scoring, Tabulation & Results System — Concordia High School JROTC Annual Clendenen March 6, 2027',
+  title: 'Concordia High School Annual Clendenen Drill Meet — March 6, 2027',
+  description: 'Official Field Judge Scoring, Tabulation & Results — Concordia High School Annual Clendenen Drill Meet, March 6, 2027',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

@@ -57,8 +57,8 @@ export default function SubmissionModal({
               <h3 className="text-base font-bold text-white">
                 Official Digital Sign-off & Lock
               </h3>
-              <p className="text-xs text-army-gold-light">
-                Concordia High School JROTC Annual Clendenen
+              <p className="text-xs text-army-gold-light leading-snug">
+                Concordia High School · Annual Clendenen Drill Meet
               </p>
             </div>
           </div>
