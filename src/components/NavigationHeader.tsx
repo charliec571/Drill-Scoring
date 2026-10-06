@@ -39,18 +39,18 @@ export default function NavigationHeader() {
   ];
 
   return (
-    <header className="bg-army-dark border-b border-army-border sticky top-0 z-50 shadow-md">
+    <header className="bg-military-dark/95 backdrop-blur-md border-b border-concordia-burgundy/40 sticky top-0 z-50 shadow-xl">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2">
         {/* Logo / Brand */}
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-full bg-army-green border-2 border-army-gold flex items-center justify-center text-army-gold shadow-sm group-hover:scale-105 transition-transform">
+          <div className="w-8 h-8 rounded-full bg-concordia-burgundy border-2 border-white flex items-center justify-center text-white shadow-md shadow-concordia-burgundy/30 group-hover:scale-105 transition-transform">
             <span className="text-xs font-black tracking-tighter">★</span>
           </div>
           <div>
             <h1 className="text-xs sm:text-sm font-extrabold text-white leading-tight uppercase tracking-tight">
-              <span className="block">Concordia High School</span>
-              <span className="block text-army-gold">Annual Clendenen</span>
-              <span className="block">Drill Meet</span>
+              <span className="block text-white">Concordia High School</span>
+              <span className="block text-concordia-burgundy-lighter font-black">Annual Clendenen</span>
+              <span className="block text-gray-200">Drill Meet</span>
             </h1>
           </div>
         </Link>
@@ -66,8 +66,8 @@ export default function NavigationHeader() {
                 href={link.href}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                   isActive
-                    ? 'bg-army-gold text-army-black font-bold shadow-md'
-                    : 'text-gray-300 hover:text-white hover:bg-army-slate/60'
+                    ? 'bg-concordia-burgundy text-white font-bold shadow-md shadow-concordia-burgundy/40 border border-concordia-burgundy-light'
+                    : 'text-gray-300 hover:text-white hover:bg-concordia-burgundy-deep/60 border border-transparent'
                 }`}
               >
                 <Icon className="w-4 h-4" />

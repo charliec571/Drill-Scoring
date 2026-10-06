@@ -280,29 +280,29 @@ export default function JudgeScorecardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 pb-12 select-none">
+    <div className="min-h-screen text-slate-100 pb-12 select-none">
       {/* HEADER BAR */}
-      <header className="sticky top-0 z-30 bg-slate-800 border-b border-slate-700 px-4 py-3 flex justify-between items-center shadow-lg">
+      <header className="sticky top-0 z-30 camo-card-burgundy border-b border-concordia-burgundy-light/40 px-4 py-3 flex justify-between items-center shadow-xl">
         <div>
-          <h1 className="text-lg font-bold text-amber-400">2026 Army Nationals</h1>
-          <p className="text-xs text-slate-400">
+          <h1 className="text-lg font-extrabold text-white">Concordia Annual Clendenen</h1>
+          <p className="text-xs text-gray-200">
             {judgeInfo?.events?.name || 'Drill Event'} | {judgeInfo?.is_head_judge ? 'HEAD JUDGE' : `Judge #${judgeInfo?.judge_number || 2}`}
           </p>
         </div>
 
         {/* TIMER DISPLAY */}
-        <div className="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700">
+        <div className="flex items-center space-x-2 bg-military-dark/90 px-3 py-1.5 rounded-lg border border-concordia-burgundy/40 shadow-inner">
           <span className="font-mono text-xl text-emerald-400 font-bold">{formatTime(timerSeconds)}</span>
           <button 
             onClick={() => setIsTimerRunning(!isTimerRunning)} 
-            className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200"
+            className="p-1.5 rounded bg-concordia-burgundy hover:bg-concordia-burgundy-light text-white transition-colors"
             title={isTimerRunning ? 'Pause Stopwatch' : 'Start Stopwatch'}
           >
             {isTimerRunning ? <Pause size={16} /> : <Play size={16} />}
           </button>
           <button 
             onClick={() => { setIsTimerRunning(false); setTimerSeconds(0); }} 
-            className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400"
+            className="p-1.5 rounded bg-military-dark hover:bg-military-slate text-gray-300 border border-military-slate transition-colors"
             title="Reset Stopwatch"
           >
             <RotateCcw size={16} />
@@ -312,10 +312,10 @@ export default function JudgeScorecardPage() {
 
       {/* DEMO / FIELD PROFILE SWITCHER */}
       {demoJudges.length > 0 && (
-        <div className="bg-slate-800/80 border-b border-slate-700/60 px-4 py-2">
+        <div className="camo-card border-b border-concordia-burgundy/40 px-4 py-2">
           <div className="max-w-2xl mx-auto flex items-center justify-between gap-2 text-xs">
-            <span className="text-slate-400 flex items-center gap-1 font-semibold">
-              <UserCheck size={14} className="text-amber-400" /> Active Judge:
+            <span className="text-gray-300 flex items-center gap-1 font-semibold">
+              <UserCheck size={14} className="text-concordia-burgundy-lighter" /> Active Judge:
             </span>
             <div className="flex items-center gap-1.5">
               {demoJudges.map((j) => (
@@ -324,8 +324,8 @@ export default function JudgeScorecardPage() {
                   onClick={() => handleSwitchDemoJudge(j.id)}
                   className={`px-2.5 py-1 rounded text-[11px] font-bold transition-all ${
                     judgeInfo?.id === j.id
-                      ? 'bg-amber-500 text-slate-950 shadow'
-                      : 'bg-slate-900 text-slate-300 hover:text-white border border-slate-700'
+                      ? 'bg-white text-concordia-burgundy-dark shadow-md border border-white font-black'
+                      : 'bg-military-dark/90 text-gray-200 hover:text-white border border-concordia-burgundy/40'
                   }`}
                 >
                   {j.is_head_judge ? '★ Head Judge' : 'Judge #2'} ({j.drill_pad})
@@ -340,12 +340,12 @@ export default function JudgeScorecardPage() {
       <main className="max-w-2xl mx-auto p-4 space-y-6">
 
         {/* TEAM SELECTION */}
-        <div className="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">Select Competing Unit</label>
+        <div className="camo-card p-4 rounded-xl border border-concordia-burgundy/40 space-y-2 shadow-lg">
+          <label className="text-xs font-bold uppercase tracking-wider text-gray-300">Select Competing Unit</label>
           <select 
             value={selectedTeamId}
             onChange={(e) => { setSelectedTeamId(e.target.value); setSubmittedSuccess(false); }}
-            className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white font-medium focus:ring-2 focus:ring-amber-500 focus:outline-none"
+            className="w-full bg-military-dark border border-concordia-burgundy/50 rounded-lg p-3 text-white font-medium focus:ring-2 focus:ring-concordia-burgundy focus:outline-none"
           >
             <option value="">-- Choose School / Team --</option>
             {teams.map((team) => (
@@ -360,9 +360,9 @@ export default function JudgeScorecardPage() {
         {selectedTeamId && !submittedSuccess && (
           <>
             {/* TECHNICAL CRITERIA SCORING */}
-            <div className="bg-slate-800 rounded-xl border border-slate-700 p-4 space-y-4">
-              <h2 className="text-sm font-semibold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                <Award size={18} /> Evaluation Movement Items
+            <div className="camo-card rounded-xl border border-concordia-burgundy/40 p-4 space-y-4 shadow-lg">
+              <h2 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                <Award size={18} className="text-concordia-burgundy-lighter" /> Evaluation Movement Items
               </h2>
 
               <div className="space-y-3">
@@ -494,16 +494,16 @@ export default function JudgeScorecardPage() {
             )}
 
             {/* SCORE SUMMARY FOOTER */}
-            <div className="bg-slate-800 p-4 rounded-xl border border-amber-500/30 flex justify-between items-center">
+            <div className="camo-card-burgundy p-4 rounded-xl border-2 border-concordia-burgundy-light/60 flex justify-between items-center shadow-xl">
               <div>
-                <div className="text-xs text-slate-400">Raw Score: <span className="font-bold text-slate-200">{totalRawScore.toFixed(2)}</span></div>
+                <div className="text-xs text-gray-200">Raw Score: <span className="font-bold text-white">{totalRawScore.toFixed(2)}</span></div>
                 {judgeInfo?.is_head_judge && (
-                  <div className="text-xs text-red-400">Deductions: <span className="font-bold">-{totalPenalties.toFixed(2)}</span></div>
+                  <div className="text-xs text-red-300">Deductions: <span className="font-bold">-{totalPenalties.toFixed(2)}</span></div>
                 )}
               </div>
               <div className="text-right">
-                <div className="text-xs text-slate-400 uppercase tracking-wider">Calculated Net</div>
-                <div className="text-2xl font-black text-emerald-400">{netScore.toFixed(2)}</div>
+                <div className="text-xs text-gray-200 uppercase tracking-wider font-bold">Calculated Net</div>
+                <div className="text-3xl font-black text-white font-mono drop-shadow">{netScore.toFixed(2)}</div>
               </div>
             </div>
 
@@ -511,9 +511,9 @@ export default function JudgeScorecardPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="w-full py-4 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-950 font-bold text-lg rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors cursor-pointer"
+              className="w-full py-4 bg-white hover:bg-gray-100 disabled:opacity-50 text-concordia-burgundy-dark font-black text-lg rounded-xl flex items-center justify-center gap-2 shadow-2xl border-2 border-white transition-all transform hover:scale-[1.01] cursor-pointer"
             >
-              {submitting ? 'Transmitting Scorecard...' : <><Send size={20} /> Submit & Lock Scorecard</>}
+              {submitting ? 'Transmitting Scorecard...' : <><Send size={20} className="text-concordia-burgundy" /> Submit & Lock Scorecard</>}
             </button>
           </>
         )}

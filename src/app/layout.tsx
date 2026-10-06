@@ -19,7 +19,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
-  themeColor: '#111418',
+  themeColor: '#7A3346',
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-army-black text-white min-h-screen flex flex-col font-sans selection:bg-army-gold selection:text-black">
+      <body className="text-white min-h-screen flex flex-col font-sans selection:bg-concordia-burgundy selection:text-white">
         <NavigationHeader />
         <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 pb-20">
           {children}

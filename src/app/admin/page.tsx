@@ -111,21 +111,21 @@ export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Top Banner / Actions */}
-      <div className="bg-gradient-to-r from-army-dark via-army-green/40 to-army-dark border border-army-border rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="camo-card-burgundy border-2 border-concordia-burgundy-light/60 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono font-bold uppercase text-army-gold px-2 py-0.5 rounded bg-army-black border border-army-border">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-xs font-mono font-bold uppercase text-white px-2.5 py-0.5 rounded bg-concordia-burgundy/80 border border-white/30 shadow-sm">
               Command & Tabulation Room
             </span>
-            <span className="text-xs text-gray-400">|</span>
-            <span className="text-xs text-gray-300">Concordia JROTC • March 6, 2027</span>
+            <span className="text-xs text-gray-300">|</span>
+            <span className="text-xs text-gray-200">Concordia JROTC • March 6, 2027</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-white leading-tight">
             Concordia High School<br />
             Annual Clendenen<br />
             Drill Meet — HQ
           </h2>
-          <p className="text-xs sm:text-sm text-gray-300 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-gray-200 mt-1 max-w-2xl font-medium">
             Live score tabulation with deterministic event & overall championship tie-breaking.
           </p>
         </div>
@@ -135,22 +135,22 @@ export default function AdminDashboardPage() {
           <button
             onClick={handleExportExcel}
             disabled={isExporting}
-            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-army-gold hover:bg-army-gold-light text-army-black font-extrabold text-xs sm:text-sm uppercase tracking-wider shadow-lg transition-transform hover:scale-102 disabled:opacity-50"
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-gray-100 text-concordia-burgundy-dark font-black text-xs sm:text-sm uppercase tracking-wider shadow-xl border-2 border-white transition-transform hover:scale-102 disabled:opacity-50"
           >
-            <FileSpreadsheet className="w-4 h-4 text-black" />
+            <FileSpreadsheet className="w-4 h-4 text-concordia-burgundy" />
             {isExporting ? 'Generating...' : 'Export Complete Excel (.xlsx)'}
           </button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-army-border pb-2 overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-concordia-burgundy/40 pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('standings')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
             activeTab === 'standings'
-              ? 'bg-army-gold text-army-black shadow-md'
-              : 'text-gray-300 hover:text-white hover:bg-army-dark'
+              ? 'bg-white text-concordia-burgundy-dark font-black shadow-md border border-white'
+              : 'text-gray-300 hover:text-white hover:bg-concordia-burgundy-deep/60'
           }`}
         >
           <Trophy className="w-4 h-4" />
@@ -160,8 +160,8 @@ export default function AdminDashboardPage() {
           onClick={() => setActiveTab('feed')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
             activeTab === 'feed'
-              ? 'bg-army-gold text-army-black shadow-md'
-              : 'text-gray-300 hover:text-white hover:bg-army-dark'
+              ? 'bg-white text-concordia-burgundy-dark font-black shadow-md border border-white'
+              : 'text-gray-300 hover:text-white hover:bg-concordia-burgundy-deep/60'
           }`}
         >
           <Clock className="w-4 h-4" />
@@ -171,8 +171,8 @@ export default function AdminDashboardPage() {
           onClick={() => setActiveTab('penalties')}
           className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all ${
             activeTab === 'penalties'
-              ? 'bg-army-gold text-army-black shadow-md'
-              : 'text-gray-300 hover:text-white hover:bg-army-dark'
+              ? 'bg-white text-concordia-burgundy-dark font-black shadow-md border border-white'
+              : 'text-gray-300 hover:text-white hover:bg-concordia-burgundy-deep/60'
           }`}
         >
           <AlertTriangle className="w-4 h-4" />
