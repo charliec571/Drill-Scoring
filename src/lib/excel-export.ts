@@ -21,7 +21,7 @@ export interface ExcelExportData {
 
 export async function generateDrillChampionshipWorkbook(data: ExcelExportData): Promise<ExcelJS.Workbook> {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'U.S. Army JROTC National Drill Championship HQ';
+  workbook.creator = 'Concordia High School JROTC Annual Clendenen HQ';
   workbook.created = new Date();
 
   const primaryHeaderFill: ExcelJS.Fill = {
@@ -78,14 +78,14 @@ export async function generateDrillChampionshipWorkbook(data: ExcelExportData): 
   });
 
   sheet1.mergeCells('A1:I1');
-  sheet1.getCell('A1').value = '2026 U.S. ARMY JROTC NATIONAL DRILL CHAMPIONSHIP - OVERALL RESULTS';
+  sheet1.getCell('A1').value = 'CONCORDIA HIGH SCHOOL JROTC ANNUAL CLENDENEN - MARCH 6, 2027 - OVERALL RESULTS';
   sheet1.getCell('A1').font = titleFont;
   sheet1.getCell('A1').fill = primaryHeaderFill;
   sheet1.getCell('A1').alignment = { vertical: 'middle', horizontal: 'center' };
   sheet1.getRow(1).height = 36;
 
   sheet1.mergeCells('A2:I2');
-  sheet1.getCell('A2').value = 'Official Standard Operating Procedures (SOP V4, Feb 2026) - Paragraph 5 Tie-Breakers Applied';
+  sheet1.getCell('A2').value = 'Official Results — Concordia High School JROTC Annual Clendenen — March 6, 2027';
   sheet1.getCell('A2').font = { italic: true, size: 10, color: { argb: 'FFFFFFFF' } };
   sheet1.getCell('A2').fill = primaryHeaderFill;
   sheet1.getCell('A2').alignment = { vertical: 'middle', horizontal: 'center' };
@@ -449,7 +449,7 @@ export async function downloadChampionshipExcel(data: ExcelExportData, filename?
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = filename || `2026_Army_JROTC_National_Drill_Championship_Results.xlsx`;
+  a.download = filename || `Concordia_JROTC_Annual_Clendenen_2027_Results.xlsx`;
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);

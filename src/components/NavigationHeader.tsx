@@ -49,14 +49,14 @@ export default function NavigationHeader() {
           <div>
             <div className="flex items-center gap-1.5">
               <span className="text-xs font-bold uppercase tracking-wider text-army-gold">
-                2026 U.S. ARMY JROTC
+                Concordia H.S. JROTC
               </span>
               <span className="hidden sm:inline-block px-1.5 py-0.2 text-[10px] uppercase font-mono font-bold bg-army-green/60 text-army-gold rounded border border-army-gold/30">
-                SOP V4
+                Mar 6, 2027
               </span>
             </div>
             <h1 className="text-sm sm:text-base font-extrabold text-white leading-tight">
-              National Drill Team Championship
+              Annual Clendenen
             </h1>
           </div>
         </Link>

@@ -70,10 +70,10 @@ export default function StadiumScoreboardPage() {
         </div>
 
         <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase">
-          2026 U.S. Army JROTC National Drill Championship
+          Concordia High School JROTC Annual Clendenen
         </h1>
         <p className="text-sm sm:text-base text-gray-300 mt-2 font-medium">
-          Standard Operating Procedures (V4, Feb 2026) • High School Division Standings
+          March 6, 2027 • Official Standings
         </p>
 
         {/* Division Switcher */}

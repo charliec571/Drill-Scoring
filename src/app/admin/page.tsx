@@ -118,13 +118,13 @@ export default function AdminDashboardPage() {
               Command & Tabulation Room
             </span>
             <span className="text-xs text-gray-400">|</span>
-            <span className="text-xs text-gray-300">SOP V4 (Feb 2026) Automated Rules Engine</span>
+            <span className="text-xs text-gray-300">Concordia JROTC Clendenen — March 6, 2027</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-white">
-            2026 JROTC National Drill Championship Headquarters
+            Concordia High School JROTC Annual Clendenen Headquarters
           </h2>
           <p className="text-xs sm:text-sm text-gray-300 mt-1 max-w-2xl">
-            Live score tabulation with deterministic SOP Paragraph 5 event & overall championship tie-breaking.
+            Live score tabulation with deterministic event & overall championship tie-breaking.
           </p>
         </div>
 

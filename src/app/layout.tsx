@@ -3,13 +3,13 @@ import './globals.css';
 import NavigationHeader from '@/components/NavigationHeader';
 
 export const metadata: Metadata = {
-  title: '2026 U.S. Army JROTC National Drill Championship',
-  description: 'Official Field Judge Scoring, Tabulation & Results System (SOP V4, Feb 2026)',
+  title: 'Concordia High School JROTC Annual Clendenen — March 6, 2027',
+  description: 'Official Field Judge Scoring, Tabulation & Results System — Concordia High School JROTC Annual Clendenen March 6, 2027',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'JROTC Drill',
+    title: 'Clendenen 2027',
   },
 };
 
