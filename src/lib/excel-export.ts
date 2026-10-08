@@ -21,7 +21,7 @@ export interface ExcelExportData {
 
 export async function generateDrillChampionshipWorkbook(data: ExcelExportData): Promise<ExcelJS.Workbook> {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Concordia High School JROTC Annual Clendenen HQ';
+  workbook.creator = 'Homer L. Clendenen Memorial Drill Meet HQ';
   workbook.created = new Date();
 
   const primaryHeaderFill: ExcelJS.Fill = {
@@ -78,14 +78,14 @@ export async function generateDrillChampionshipWorkbook(data: ExcelExportData): 
   });
 
   sheet1.mergeCells('A1:I1');
-  sheet1.getCell('A1').value = 'CONCORDIA HIGH SCHOOL — ANNUAL CLENDENEN DRILL MEET — MARCH 6, 2027';
+  sheet1.getCell('A1').value = 'HOMER L. CLENDENEN MEMORIAL DRILL MEET — MARCH 6, 2027';
   sheet1.getCell('A1').font = titleFont;
   sheet1.getCell('A1').fill = primaryHeaderFill;
   sheet1.getCell('A1').alignment = { vertical: 'middle', horizontal: 'center' };
   sheet1.getRow(1).height = 36;
 
   sheet1.mergeCells('A2:I2');
-  sheet1.getCell('A2').value = 'Official Results — Concordia High School Annual Clendenen Drill Meet — March 6, 2027';
+  sheet1.getCell('A2').value = 'Official Results — Homer L. Clendenen Memorial Drill Meet, Concordia Lutheran H.S. — March 6, 2027';
   sheet1.getCell('A2').font = { italic: true, size: 10, color: { argb: 'FFFFFFFF' } };
   sheet1.getCell('A2').fill = primaryHeaderFill;
   sheet1.getCell('A2').alignment = { vertical: 'middle', horizontal: 'center' };

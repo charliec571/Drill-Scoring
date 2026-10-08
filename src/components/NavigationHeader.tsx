@@ -48,9 +48,9 @@ export default function NavigationHeader() {
           </div>
           <div>
             <h1 className="text-xs sm:text-sm font-extrabold text-white leading-tight uppercase tracking-tight">
-              <span className="block text-white">Concordia High School</span>
-              <span className="block text-concordia-burgundy-lighter font-black">Annual Clendenen</span>
-              <span className="block text-gray-200">Drill Meet</span>
+              <span className="block text-concordia-burgundy-lighter font-black">Homer L. Clendenen</span>
+              <span className="block text-white">Memorial Drill Meet</span>
+              <span className="block text-gray-300 text-[10px] font-normal normal-case tracking-wide">Concordia Lutheran H.S. · Mar 6, 2027</span>
             </h1>
           </div>
         </Link>

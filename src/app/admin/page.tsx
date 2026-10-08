@@ -121,9 +121,8 @@ export default function AdminDashboardPage() {
             <span className="text-xs text-gray-200">Concordia JROTC • March 6, 2027</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-white leading-tight">
-            Concordia High School<br />
-            Annual Clendenen<br />
-            Drill Meet — HQ
+            Homer L. Clendenen<br />
+            Memorial Drill Meet — HQ
           </h2>
           <p className="text-xs sm:text-sm text-gray-200 mt-1 max-w-2xl font-medium">
             Live score tabulation with deterministic event & overall championship tie-breaking.

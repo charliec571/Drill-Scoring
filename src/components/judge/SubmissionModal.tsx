@@ -58,7 +58,7 @@ export default function SubmissionModal({
                 Official Digital Sign-off & Lock
               </h3>
               <p className="text-xs text-army-gold-light leading-snug">
-                Concordia High School · Annual Clendenen Drill Meet
+                Homer L. Clendenen Memorial Drill Meet · Concordia Lutheran H.S.
               </p>
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function SubmissionModal({
                 className="mt-1 w-4 h-4 rounded text-army-gold focus:ring-army-gold bg-army-black border-army-border cursor-pointer"
               />
               <label htmlFor="lock-confirm" className="text-xs text-gray-300 leading-snug cursor-pointer">
-                I attest that this scorecard was recorded in accordance with official Concordia High School JROTC Annual Clendenen (March 6, 2027) rules.
+                I attest that this scorecard was recorded in accordance with official Homer L. Clendenen Memorial Drill Meet (March 6, 2027) rules.
                 <span className="block text-amber-300 font-bold mt-1">
                   ⚠️ Once submitted, this scorecard transitions to SUBMITTED status and will be permanently locked from field edits.
                 </span>

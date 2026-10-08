@@ -4,16 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { createClientComponentClient } from '@/lib/supabase';
 import { 
   Play, Pause, RotateCcw, AlertTriangle, CheckCircle2, 
-  Minus, Plus, ShieldAlert, Award, FileText, Send, UserCheck, Shield
+  Minus, Plus, ShieldAlert, Award, FileText, Send, UserCheck, Shield, Clock
 } from 'lucide-react';
 import { drillStore, INITIAL_JUDGES, INITIAL_TEAMS, INITIAL_EVENTS } from '@/lib/store';
 import { isSupabaseConfigured } from '@/lib/supabase';
+import { getCriteriaForEvent, CriteriaDefinition } from '@/lib/drill-sop/criteria';
 
-interface CriteriaItem {
+// Local scoring state per criteria item
+interface CriteriaScore {
   id: string;
-  label: string;
-  maxPoints: number;
-  score: number;
+  score: number; // 0 = unscored, 1-5 for regulation/exhibition, 1-10 for CG commands, 1-25 for CG holistic
 }
 
 export default function JudgeScorecardPage() {
@@ -28,23 +28,14 @@ export default function JudgeScorecardPage() {
   const [submittedSuccess, setSubmittedSuccess] = useState<boolean>(false);
   const [demoJudges, setDemoJudges] = useState<any[]>([]);
 
-  // Score Criteria States (TC 3-21.5 Standard Movements)
-  const [criteria, setCriteria] = useState<CriteriaItem[]>([
-    { id: 'report_in', label: '1. Report In / Commander Precision', maxPoints: 10, score: 9.5 },
-    { id: 'march_inspection', label: '2. Marching Technique & Cadence', maxPoints: 10, score: 9.0 },
-    { id: 'open_ranks', label: '3. Open Ranks / Alignment Precision', maxPoints: 10, score: 9.5 },
-    { id: 'manual_arms', label: '4. Manual of Arms Execution', maxPoints: 10, score: 9.5 },
-    { id: 'overall_bearing', label: '5. Bearing & Military Courtesy', maxPoints: 10, score: 9.0 },
-  ]);
-
-  // Head Judge Specific Inspection Tie-Breaker Fields
-  const [overallKnowledge, setOverallKnowledge] = useState<number>(48);
-  const [uniformAppearance, setUniformAppearance] = useState<number>(47);
+  // Official criteria loaded for this judge's event
+  const [officialCriteria, setOfficialCriteria] = useState<CriteriaDefinition[]>([]);
+  const [criteriaScores, setCriteriaScores] = useState<CriteriaScore[]>([]);
 
   // Penalty Counters (Head Judge Only)
-  const [missingCadets, setMissingCadets] = useState<number>(0);
-  const [pauseViolations, setPauseViolations] = useState<number>(0);
   const [boundaryViolations, setBoundaryViolations] = useState<number>(0);
+  const [outOfSequence, setOutOfSequence] = useState<number>(0);
+  const [missingCadets, setMissingCadets] = useState<number>(0);
 
   // Field Timer State
   const [timerSeconds, setTimerSeconds] = useState<number>(0);
@@ -64,7 +55,6 @@ export default function JudgeScorecardPage() {
           const { data: { user } } = await supabase.auth.getUser();
           
           if (user) {
-            // Fetch judge details
             const { data: judgeRaw } = await supabase
               .from('judges')
               .select('*, events(*)')
@@ -74,7 +64,6 @@ export default function JudgeScorecardPage() {
 
             if (judge) {
               activeJudge = judge;
-              // Fetch teams matching judge's event division
               if (judge?.events?.division) {
                 const { data: teamData } = await supabase
                   .from('teams')
@@ -119,6 +108,14 @@ export default function JudgeScorecardPage() {
         if (activeTeams.length > 0 && !selectedTeamId) {
           setSelectedTeamId(activeTeams[0].id);
         }
+
+        // Load official criteria for this judge's event
+        const category = activeJudge?.events?.category || 'REGULATION';
+        const division = activeJudge?.events?.division;
+        const criteria = getCriteriaForEvent(category, division);
+        setOfficialCriteria(criteria);
+        setCriteriaScores(criteria.map((c) => ({ id: c.id, score: 0 })));
+
       } catch (err) {
         console.warn('Error fetching live judge data, falling back to local store:', err);
       } finally {
@@ -128,7 +125,7 @@ export default function JudgeScorecardPage() {
     loadData();
   }, []);
 
-  // Switch demo judge (Head Judge vs Judge #2)
+  // Switch demo judge
   const handleSwitchDemoJudge = (judgeId: string) => {
     const selected = demoJudges.find((j) => j.id === judgeId);
     if (!selected) return;
@@ -149,7 +146,17 @@ export default function JudgeScorecardPage() {
     if (filteredTeams.length > 0) {
       setSelectedTeamId(filteredTeams[0].id);
     }
+
+    // Reload criteria for the new judge's event
+    const category = selected?.events?.category || 'REGULATION';
+    const division = selected?.events?.division;
+    const criteria = getCriteriaForEvent(category, division);
+    setOfficialCriteria(criteria);
+    setCriteriaScores(criteria.map((c) => ({ id: c.id, score: 0 })));
     setSubmittedSuccess(false);
+    setBoundaryViolations(0);
+    setOutOfSequence(0);
+    setMissingCadets(0);
   };
 
   // ------------------------------------------------------------------
@@ -170,24 +177,48 @@ export default function JudgeScorecardPage() {
   };
 
   // ------------------------------------------------------------------
-  // 3. Computed Calculations
+  // 3. Scoring helpers
   // ------------------------------------------------------------------
-  const totalRawScore = criteria.reduce((sum, item) => sum + Number(item.score), 0);
-  
-  // Calculate Over/Under Time Penalties (e.g. if max limit is exceeded)
+  const setScore = (id: string, score: number) => {
+    setCriteriaScores((prev) =>
+      prev.map((cs) => (cs.id === id ? { ...cs, score } : cs))
+    );
+  };
+
+  const getScore = (id: string) => criteriaScores.find((cs) => cs.id === id)?.score ?? 0;
+
+  // Build tap button options for a given item (1 to maxPoints, stepping by 1 for 1-5, 1-10, etc.)
+  // For regulation: 1-5 buttons. For CG commands: 2,4,6,8,10. For holistic: 5,10,15,20,25.
+  const getTapOptions = (maxPoints: number): number[] => {
+    if (maxPoints === 5) return [1, 2, 3, 4, 5];
+    if (maxPoints === 10) return [2, 4, 6, 8, 10];
+    if (maxPoints === 25) return [5, 10, 15, 20, 25];
+    // Fallback: evenly spaced 5 options
+    const step = maxPoints / 5;
+    return [1, 2, 3, 4, 5].map((i) => Math.round(i * step));
+  };
+
+  // ------------------------------------------------------------------
+  // 4. Computed Calculations
+  // ------------------------------------------------------------------
+  const totalRawScore = criteriaScores.reduce((sum, cs) => sum + cs.score, 0);
+  const maxPossibleScore = officialCriteria.reduce((sum, c) => sum + c.maxPoints, 0);
+
   const maxSecs = judgeInfo?.events?.time_limit_max_sec || judgeInfo?.events?.time_limit_max || 0;
   const timePenaltySecs = maxSecs > 0 && timerSeconds > maxSecs ? timerSeconds - maxSecs : 0;
-  
-  const totalPenalties = 
-    (missingCadets * 25) + 
-    (pauseViolations * 5) + 
-    (boundaryViolations * 10) + 
+
+  const totalPenalties =
+    (boundaryViolations * 10) +
+    (outOfSequence * 10) +
+    (missingCadets * 25) +
     (timePenaltySecs * 1);
 
   const netScore = Math.max(0, totalRawScore - totalPenalties);
+  const scoredCount = criteriaScores.filter((cs) => cs.score > 0).length;
+  const progressPct = officialCriteria.length > 0 ? Math.round((scoredCount / officialCriteria.length) * 100) : 0;
 
   // ------------------------------------------------------------------
-  // 4. Submit Scorecard & Penalties
+  // 5. Submit Scorecard & Penalties
   // ------------------------------------------------------------------
   const handleSubmit = async () => {
     if (!selectedTeamId) {
@@ -197,20 +228,19 @@ export default function JudgeScorecardPage() {
 
     setSubmitting(true);
     try {
-      const breakdownObj = criteria.reduce((acc, curr) => {
+      const breakdownObj = criteriaScores.reduce((acc, curr) => {
         acc[curr.id] = curr.score;
         return acc;
       }, {} as Record<string, number>);
 
-      // Sync to local store so live tabulation and scoreboard update in real time
       drillStore.saveScorecard({
         id: `sc-${judgeInfo.id}-${selectedTeamId}-${judgeInfo.assigned_event_id}`,
         team_id: selectedTeamId,
         judge_id: judgeInfo.id,
         event_id: judgeInfo.assigned_event_id,
         raw_score: totalRawScore,
-        overall_knowledge_score: judgeInfo.is_head_judge ? overallKnowledge : 0,
-        uniform_appearance_score: judgeInfo.is_head_judge ? uniformAppearance : 0,
+        overall_knowledge_score: 0,
+        uniform_appearance_score: 0,
         criteria_breakdown: breakdownObj,
         criteria_scores: breakdownObj,
         status: 'SUBMITTED',
@@ -225,7 +255,7 @@ export default function JudgeScorecardPage() {
           event_id: judgeInfo.assigned_event_id,
           head_judge_id: judgeInfo.id,
           missing_cadet_count: missingCadets,
-          pause_violation_count: pauseViolations,
+          pause_violation_count: 0,
           boundary_violations: boundaryViolations,
           time_under_over_seconds: timePenaltySecs,
           total_penalty_deduction: totalPenalties,
@@ -233,7 +263,6 @@ export default function JudgeScorecardPage() {
         });
       }
 
-      // If connected to live Supabase, push to backend
       if (isSupabaseConfigured) {
         const { error: scorecardErr } = await supabase
           .from('scorecards')
@@ -242,9 +271,9 @@ export default function JudgeScorecardPage() {
             judge_id: judgeInfo.id,
             event_id: judgeInfo.assigned_event_id,
             raw_score: totalRawScore,
-            overall_knowledge_score: judgeInfo.is_head_judge ? overallKnowledge : 0,
-            uniform_appearance_score: judgeInfo.is_head_judge ? uniformAppearance : 0,
-            criteria_breakdown: criteria,
+            overall_knowledge_score: 0,
+            uniform_appearance_score: 0,
+            criteria_breakdown: criteriaScores,
             status: 'SUBMITTED',
             submitted_at: new Date().toISOString()
           } as any);
@@ -259,7 +288,7 @@ export default function JudgeScorecardPage() {
               event_id: judgeInfo.assigned_event_id,
               head_judge_id: judgeInfo.id,
               missing_cadet_count: missingCadets,
-              pause_violation_count: pauseViolations,
+              pause_violation_count: 0,
               boundary_violations: boundaryViolations,
               time_under_over_seconds: timePenaltySecs,
             } as any);
@@ -284,7 +313,7 @@ export default function JudgeScorecardPage() {
       {/* HEADER BAR */}
       <header className="sticky top-0 z-30 camo-card-burgundy border-b border-concordia-burgundy-light/40 px-4 py-3 flex justify-between items-center shadow-xl">
         <div>
-          <h1 className="text-lg font-extrabold text-white">Concordia Annual Clendenen</h1>
+          <h1 className="text-lg font-extrabold text-white">Homer L. Clendenen Memorial Drill Meet</h1>
           <p className="text-xs text-gray-200">
             {judgeInfo?.events?.name || 'Drill Event'} | {judgeInfo?.is_head_judge ? 'HEAD JUDGE' : `Judge #${judgeInfo?.judge_number || 2}`}
           </p>
@@ -359,72 +388,110 @@ export default function JudgeScorecardPage() {
         {/* SCORECARD FORM */}
         {selectedTeamId && !submittedSuccess && (
           <>
-            {/* TECHNICAL CRITERIA SCORING */}
-            <div className="camo-card rounded-xl border border-concordia-burgundy/40 p-4 space-y-4 shadow-lg">
-              <h2 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                <Award size={18} className="text-concordia-burgundy-lighter" /> Evaluation Movement Items
-              </h2>
-
-              <div className="space-y-3">
-                {criteria.map((item, idx) => (
-                  <div key={item.id} className="bg-slate-900 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
-                    <span className="text-sm font-medium pr-2 text-slate-200">{item.label}</span>
-                    <div className="flex items-center space-x-2">
-                      <input 
-                        type="number"
-                        step={0.5}
-                        min={0}
-                        max={item.maxPoints}
-                        value={item.score}
-                        onChange={(e) => {
-                          const val = Math.min(item.maxPoints, Math.max(0, Number(e.target.value)));
-                          const updated = [...criteria];
-                          updated[idx].score = val;
-                          setCriteria(updated);
-                        }}
-                        className="w-16 bg-slate-800 border border-slate-600 rounded text-center py-1.5 text-lg font-bold text-emerald-400 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                      />
-                      <span className="text-xs text-slate-500">/ {item.maxPoints}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* HEAD JUDGE SPECIAL INSPECTION BREAKDOWN */}
-            {judgeInfo?.is_head_judge && (
-              <div className="camo-card rounded-xl border border-concordia-burgundy/40 p-4 space-y-4 shadow-lg">
-                <h2 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
-                  <FileText size={18} className="text-concordia-burgundy-lighter" /> Tie-Breaker Categories (Head Judge Only)
-                </h2>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-military-dark/90 p-3 rounded-lg border border-concordia-burgundy/30 space-y-1">
-                    <label className="text-xs text-gray-300 font-medium">Overall Knowledge (Tie-Breaker #3)</label>
-                    <input 
-                      type="number"
-                      value={overallKnowledge}
-                      onChange={(e) => setOverallKnowledge(Number(e.target.value))}
-                      className="w-full bg-military-slate/60 border border-concordia-burgundy/40 rounded p-2 text-center text-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-concordia-burgundy"
-                    />
-                  </div>
-                  <div className="bg-military-dark/90 p-3 rounded-lg border border-concordia-burgundy/30 space-y-1">
-                    <label className="text-xs text-gray-300 font-medium">Uniform Appearance (Tie-Breaker #4)</label>
-                    <input 
-                      type="number"
-                      value={uniformAppearance}
-                      onChange={(e) => setUniformAppearance(Number(e.target.value))}
-                      className="w-full bg-military-slate/60 border border-concordia-burgundy/40 rounded p-2 text-center text-lg font-bold text-white focus:outline-none focus:ring-2 focus:ring-concordia-burgundy"
-                    />
-                  </div>
+            {/* PROGRESS BAR */}
+            {officialCriteria.length > 0 && (
+              <div className="camo-card p-3 rounded-xl border border-concordia-burgundy/30 shadow">
+                <div className="flex justify-between items-center mb-1.5 text-xs text-gray-300">
+                  <span className="font-semibold">Scoring Progress</span>
+                  <span className="font-mono font-bold text-white">{scoredCount} / {officialCriteria.length} items scored</span>
                 </div>
+                <div className="w-full bg-military-dark rounded-full h-2.5 border border-military-slate/60">
+                  <div
+                    className="h-2.5 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${progressPct}%`,
+                      backgroundColor: progressPct === 100 ? '#4ade80' : '#7A3346',
+                    }}
+                  />
+                </div>
+                <div className="text-right text-xs text-gray-400 mt-1 font-mono">{progressPct}%</div>
               </div>
             )}
+
+            {/* OFFICIAL MOVEMENT CRITERIA — 1-5 TAP BUTTONS */}
+            <div className="camo-card rounded-xl border border-concordia-burgundy/40 p-4 space-y-3 shadow-lg">
+              <h2 className="text-sm font-extrabold text-white uppercase tracking-wider flex items-center gap-2">
+                <Award size={18} className="text-concordia-burgundy-lighter" /> 
+                Official Prescribed Movements
+                <span className="ml-auto text-xs font-normal text-gray-400 normal-case tracking-normal">
+                  {officialCriteria.length} items · max {maxPossibleScore} pts
+                </span>
+              </h2>
+
+              {officialCriteria.length === 0 ? (
+                <p className="text-sm text-gray-400 text-center py-4">No criteria loaded for this event.</p>
+              ) : (
+                <div className="space-y-2">
+                  {officialCriteria.map((item) => {
+                    const currentScore = getScore(item.id);
+                    const tapOptions = getTapOptions(item.maxPoints);
+                    return (
+                      <div
+                        key={item.id}
+                        className={`rounded-lg border p-3 transition-colors ${
+                          currentScore > 0
+                            ? 'bg-military-dark/80 border-concordia-burgundy/50'
+                            : 'bg-slate-900/70 border-slate-800'
+                        }`}
+                      >
+                        {/* Command header row */}
+                        <div className="flex items-start gap-2 mb-2.5">
+                          {/* Sequence number badge */}
+                          <span className="flex-shrink-0 w-7 h-7 rounded bg-military-dark border border-concordia-burgundy/40 text-xs font-black text-concordia-burgundy-lighter flex items-center justify-center">
+                            {item.seqNumber}
+                          </span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className={`text-sm font-semibold leading-tight ${currentScore > 0 ? 'text-white' : 'text-slate-200'}`}>
+                                {item.name}
+                              </span>
+                              {item.isPauseCommand && (
+                                <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-900/60 text-amber-300 border border-amber-600/40">
+                                  <Clock size={9} />5 SEC
+                                </span>
+                              )}
+                            </div>
+                            {item.description && !item.isPauseCommand && (
+                              <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">{item.description}</p>
+                            )}
+                          </div>
+                          {/* Current score display */}
+                          <div className="flex-shrink-0 text-right">
+                            <span className={`text-lg font-black font-mono ${currentScore > 0 ? 'text-emerald-400' : 'text-slate-600'}`}>
+                              {currentScore > 0 ? currentScore : '—'}
+                            </span>
+                            <div className="text-[10px] text-slate-500">/{item.maxPoints}</div>
+                          </div>
+                        </div>
+
+                        {/* TAP BUTTONS */}
+                        <div className="flex gap-1.5">
+                          {tapOptions.map((val) => (
+                            <button
+                              key={val}
+                              onClick={() => setScore(item.id, currentScore === val ? 0 : val)}
+                              className={`flex-1 py-2.5 rounded-lg text-sm font-black border transition-all active:scale-95 ${
+                                currentScore === val
+                                  ? 'bg-concordia-burgundy border-concordia-burgundy-light text-white shadow-lg shadow-concordia-burgundy/40'
+                                  : 'bg-military-dark/80 border-slate-700 text-slate-300 hover:border-concordia-burgundy/50 hover:text-white'
+                              }`}
+                            >
+                              {val}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
             {/* HEAD JUDGE PENALTY CONTROLLERS */}
             {judgeInfo?.is_head_judge && (
               <div className="camo-card rounded-xl border border-red-900/50 p-4 space-y-4 shadow-lg">
                 <h2 className="text-sm font-extrabold text-red-300 uppercase tracking-wider flex items-center gap-2">
-                  <ShieldAlert size={18} className="text-red-400" /> Rule Violations & Deductions
+                  <ShieldAlert size={18} className="text-red-400" /> Rule Violations &amp; Deductions
                 </h2>
 
                 <div className="space-y-3">
@@ -435,28 +502,28 @@ export default function JudgeScorecardPage() {
                       <div className="text-xs text-red-400">-10 pts per event boundary breach</div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <button onClick={() => setBoundaryViolations(Math.max(0, boundaryViolations - 1))} className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300">
+                      <button onClick={() => setBoundaryViolations(Math.max(0, boundaryViolations - 1))} className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 active:scale-95">
                         <Minus size={16} />
                       </button>
                       <span className="font-mono text-xl font-bold w-6 text-center text-red-400">{boundaryViolations}</span>
-                      <button onClick={() => setBoundaryViolations(boundaryViolations + 1)} className="p-2 bg-red-950/60 border border-red-800 rounded-lg text-red-300">
+                      <button onClick={() => setBoundaryViolations(boundaryViolations + 1)} className="p-2 bg-red-950/60 border border-red-800 rounded-lg text-red-300 active:scale-95">
                         <Plus size={16} />
                       </button>
                     </div>
                   </div>
 
-                  {/* Mandatory Pause Violations */}
+                  {/* Out-of-Sequence Command */}
                   <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800 flex justify-between items-center">
                     <div>
-                      <div className="text-sm font-medium text-slate-200">Failed 5-Sec Pause</div>
-                      <div className="text-xs text-red-400">-5 pts per missed pause on BOLD/CAPS</div>
+                      <div className="text-sm font-medium text-slate-200">Out-of-Sequence Command</div>
+                      <div className="text-xs text-red-400">-10 pts per command given out of order</div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <button onClick={() => setPauseViolations(Math.max(0, pauseViolations - 1))} className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300">
+                      <button onClick={() => setOutOfSequence(Math.max(0, outOfSequence - 1))} className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 active:scale-95">
                         <Minus size={16} />
                       </button>
-                      <span className="font-mono text-xl font-bold w-6 text-center text-red-400">{pauseViolations}</span>
-                      <button onClick={() => setPauseViolations(pauseViolations + 1)} className="p-2 bg-red-950/60 border border-red-800 rounded-lg text-red-300">
+                      <span className="font-mono text-xl font-bold w-6 text-center text-red-400">{outOfSequence}</span>
+                      <button onClick={() => setOutOfSequence(outOfSequence + 1)} className="p-2 bg-red-950/60 border border-red-800 rounded-lg text-red-300 active:scale-95">
                         <Plus size={16} />
                       </button>
                     </div>
@@ -469,17 +536,17 @@ export default function JudgeScorecardPage() {
                       <div className="text-xs text-red-400">-25 pts per cadet below requirement</div>
                     </div>
                     <div className="flex items-center space-x-3">
-                      <button onClick={() => setMissingCadets(Math.max(0, missingCadets - 1))} className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300">
+                      <button onClick={() => setMissingCadets(Math.max(0, missingCadets - 1))} className="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 active:scale-95">
                         <Minus size={16} />
                       </button>
                       <span className="font-mono text-xl font-bold w-6 text-center text-red-400">{missingCadets}</span>
-                      <button onClick={() => setMissingCadets(missingCadets + 1)} className="p-2 bg-red-950/60 border border-red-800 rounded-lg text-red-300">
+                      <button onClick={() => setMissingCadets(missingCadets + 1)} className="p-2 bg-red-950/60 border border-red-800 rounded-lg text-red-300 active:scale-95">
                         <Plus size={16} />
                       </button>
                     </div>
                   </div>
 
-                  {/* Time Violations (if stopwatch exceeded maxSecs) */}
+                  {/* Time Violations */}
                   {timePenaltySecs > 0 && (
                     <div className="bg-slate-900/80 p-3 rounded-lg border border-red-900/60 flex justify-between items-center">
                       <div>
@@ -494,26 +561,33 @@ export default function JudgeScorecardPage() {
             )}
 
             {/* SCORE SUMMARY FOOTER */}
-            <div className="camo-card-burgundy p-4 rounded-xl border-2 border-concordia-burgundy-light/60 flex justify-between items-center shadow-xl">
-              <div>
-                <div className="text-xs text-gray-200">Raw Score: <span className="font-bold text-white">{totalRawScore.toFixed(2)}</span></div>
-                {judgeInfo?.is_head_judge && (
-                  <div className="text-xs text-red-300">Deductions: <span className="font-bold">-{totalPenalties.toFixed(2)}</span></div>
-                )}
-              </div>
-              <div className="text-right">
-                <div className="text-xs text-gray-200 uppercase tracking-wider font-bold">Calculated Net</div>
-                <div className="text-3xl font-black text-white font-mono drop-shadow">{netScore.toFixed(2)}</div>
+            <div className="camo-card-burgundy p-4 rounded-xl border-2 border-concordia-burgundy-light/60 shadow-xl">
+              <div className="flex justify-between items-center">
+                <div className="space-y-1">
+                  <div className="text-xs text-gray-200">
+                    Raw Score: <span className="font-bold text-white font-mono">{totalRawScore}</span>
+                    <span className="text-gray-400"> / {maxPossibleScore}</span>
+                  </div>
+                  {judgeInfo?.is_head_judge && totalPenalties > 0 && (
+                    <div className="text-xs text-red-300">
+                      Deductions: <span className="font-bold">-{totalPenalties}</span>
+                    </div>
+                  )}
+                </div>
+                <div className="text-right">
+                  <div className="text-xs text-gray-200 uppercase tracking-wider font-bold">Net Score</div>
+                  <div className="text-3xl font-black text-white font-mono drop-shadow">{netScore}</div>
+                </div>
               </div>
             </div>
 
             {/* SUBMIT BUTTON */}
             <button
               onClick={handleSubmit}
-              disabled={submitting}
+              disabled={submitting || scoredCount === 0}
               className="w-full py-4 bg-white hover:bg-gray-100 disabled:opacity-50 text-concordia-burgundy-dark font-black text-lg rounded-xl flex items-center justify-center gap-2 shadow-2xl border-2 border-white transition-all transform hover:scale-[1.01] cursor-pointer"
             >
-              {submitting ? 'Transmitting Scorecard...' : <><Send size={20} className="text-concordia-burgundy" /> Submit & Lock Scorecard</>}
+              {submitting ? 'Transmitting Scorecard...' : <><Send size={20} className="text-concordia-burgundy" /> Submit &amp; Lock Scorecard</>}
             </button>
           </>
         )}

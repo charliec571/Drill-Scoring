@@ -70,9 +70,9 @@ export default function StadiumScoreboardPage() {
         </div>
 
         <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight">
-          <span className="block text-white drop-shadow-md">Concordia High School</span>
-          <span className="block text-concordia-burgundy-lighter drop-shadow-md">Annual Clendenen</span>
-          <span className="block text-gray-100">Drill Meet</span>
+          <span className="block text-concordia-burgundy-lighter drop-shadow-md">Homer L. Clendenen</span>
+          <span className="block text-white drop-shadow-md">Memorial Drill Meet</span>
+          <span className="block text-gray-100">Official Standings</span>
         </h1>
         <p className="text-sm sm:text-base text-gray-200 mt-2 font-medium">
           March 6, 2027 • Official Standings
